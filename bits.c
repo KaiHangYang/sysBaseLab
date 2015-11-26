@@ -140,10 +140,13 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int thirdBits(void) {
-    int result = 4;
-    int flag = 4;
-    result = result << 3
-    return 2;
+    int result = 36;
+    int flag = 36;
+    result = (result << 6) | flag;
+    result = (result << 6) | flag;
+    result = (result << 6) | flag;
+    result = (result << 6) | flag;
+    return result;
 }
 // Rating: 2
 /* 
@@ -167,7 +170,8 @@ int fitsBits(int x, int n) {
  *  Rating: 2
  */
 int sign(int x) {
-  return 2;
+    int flag = !x + 2&(1 << (x >> 31));
+    return -1 + (2 >> flag);
 }
 /* 
  * getByte - Extract byte n from word x
@@ -178,7 +182,8 @@ int sign(int x) {
  *   Rating: 2
  */
 int getByte(int x, int n) {
-  return 2;
+    int mask = 255;
+    return mask & (x >> (n << 3));
 }
 // Rating: 3
 /* 
@@ -188,9 +193,11 @@ int getByte(int x, int n) {
  *   Legal ops: ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 3 
+ *   负数移位补1
  */
 int logicalShift(int x, int n) {
-  return 2;
+    int mask = ((~(1 << 31)>>n) << 1);
+    return (x >> n) & mask;
 }
 /* 
  * addOK - Determine if can compute x+y without overflow
@@ -201,7 +208,11 @@ int logicalShift(int x, int n) {
  *   Rating: 3
  */
 int addOK(int x, int y) {
-  return 2;
+    int mask = ~(1 << 31);
+    int h1 = x >> 31;
+    int h2 = y >> 31;
+    int h3 = ((mask & x) + (mask & y)) >> 31;
+    return  !(2 & (h1 + h2 + h3)) ;
 }
 // Rating: 4
 /* 
@@ -209,10 +220,11 @@ int addOK(int x, int y) {
  *   Examples: bang(3) = 0, bang(0) = 1
  *   Legal ops: ~ & ^ | + << >>
  *   Max ops: 12
- *   Rating: 4 
+ *   Rating: 4  
+ *   只有 0 的翻转加1 会使最高位为0
  */
 int bang(int x) {
-  return 2;
+  return ~((x | (~x + 1)) >> 31);
 }
 // Extra Credit: Rating: 3
 /* 
@@ -223,7 +235,8 @@ int bang(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+
+    return 2;
 }
 // Extra Credit: Rating: 4
 /*
