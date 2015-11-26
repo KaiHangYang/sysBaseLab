@@ -2,7 +2,7 @@
  * CSE 351 HW1 (Data Lab )
  * 
  * <Please put your name and userid here>
- * 杨凯航
+ * 杨凯航 U201315039
  * bits.c - Source file with your solutions to the Lab.
  *          This is the file you will hand in to your instructor.
  *
@@ -120,7 +120,7 @@ NOTES:
  *   Rating: 1
  */
 int bitAnd(int x, int y) {
-  return 2;
+    return ~((~x)|(~y));
 }
 /* 
  * bitXor - x^y using only ~ and & 
@@ -130,7 +130,7 @@ int bitAnd(int x, int y) {
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return 2;
+  return ~((~((~x)&y)) & (~((~y)&x)));
 }
 /* 
  * thirdBits - return word with every third bit (starting from the LSB) set to 1
@@ -140,7 +140,10 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int thirdBits(void) {
-  return 2;
+    int result = 4;
+    int flag = 4;
+    result = result << 3
+    return 2;
 }
 // Rating: 2
 /* 
