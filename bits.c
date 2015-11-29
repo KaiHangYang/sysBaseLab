@@ -140,8 +140,8 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int thirdBits(void) {
-    int result = 36;
-    int flag = 36;
+    int result = 73;
+    int flag = 73;
     result = (result << 6) | flag;
     result = (result << 6) | flag;
     result = (result << 6) | flag;
@@ -159,7 +159,9 @@ int thirdBits(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  return 2;
+    int flag = x >> (n + ~0);
+    
+    return !((flag+1) >> 1);
 }
 /* 
  * sign - return 1 if positive, 0 if zero, and -1 if negative
@@ -170,7 +172,8 @@ int fitsBits(int x, int n) {
  *  Rating: 2
  */
 int sign(int x) {
-    int flag = (!x) + (2&(1 << (x >> 31)));
+    int flag = (!x) + (2&((x >> 31) << 1));
+
     return (~0) + (2 >> flag);
 }
 /* 
@@ -196,7 +199,7 @@ int getByte(int x, int n) {
  *   负数移位补1
  */
 int logicalShift(int x, int n) {
-    int mask = ((~(1 << 31)>>n) << 1);
+    int mask = (((~(1 << 31)) >> n) << 1) + 1;
     return (x >> n) & mask;
 }
 /* 
@@ -208,11 +211,11 @@ int logicalShift(int x, int n) {
  *   Rating: 3
  */
 int addOK(int x, int y) {
-    int mask = ~(1 << 31);
-    int h1 = x >> 31;
-    int h2 = y >> 31;
-    int h3 = ((mask & x) + (mask & y)) >> 31;
-    return  !(2 & (h1 + h2 + h3)) ;
+    int mask = (1 << 31);
+    int h1 = !!(x&mask);
+    int h2 = !!(y&mask);
+    h1 += (((((~mask)&x)+((~mask)&y))&mask) >> 31) + h2;
+    return  !((2 & h1) >> 1);
 }
 // Rating: 4
 /* 
@@ -224,7 +227,7 @@ int addOK(int x, int y) {
  *   只有 0 的翻转加1 会使最高位为0
  */
 int bang(int x) {
-  return ~((x | (~x + 1)) >> 31);
+  return ((~(x | (~x + 1))) >> 31) & 1;
 }
 // Extra Credit: Rating: 3
 /* 
