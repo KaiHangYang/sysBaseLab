@@ -238,8 +238,9 @@ int bang(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-
-    return 2;
+    int mask = !!x;
+    mask = (mask << 31) >> 31;
+    return (mask&y) | ((~mask)&z);
 }
 // Extra Credit: Rating: 4
 /*
@@ -249,9 +250,11 @@ int conditional(int x, int y, int z) {
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 4
+ *   2的幂-1 永远与2 & 为零
  */
 int isPower2(int x) {
-  return 2;
+    int flag = (x >> 31) & 1;
+    return !((x & (x+(~0))) | flag) & !!x;
 }
 // Rating: 2
 /* 
@@ -266,7 +269,11 @@ int isPower2(int x) {
  *   Rating: 2
  */
 unsigned float_neg(unsigned uf) {
- return 2;
+    if (((uf >> 23) & 255) == 255 && (((1 << 23) - 1) & uf)) {
+        return uf;
+    }
+    uf = uf ^ (1 << 31);
+    return uf;
 }
 // Rating: 4
 /* 
@@ -279,7 +286,33 @@ unsigned float_neg(unsigned uf) {
  *   Rating: 4
  */
 unsigned float_i2f(int x) {
-  return 2;
+    
+    unsigned int tmpx = x; // 利用非符号位扩展
+    int sign = ((x >> 31) & 1);
+    int e = 0;
+    if (x == 0) {
+        return 0;
+    }
+    if (sign == 1) {
+        // 表示负数
+        x = -x; // 原值
+    }
+    // 计算e
+    while (1) {
+        if (tmpx == 0) {
+            break;
+        }
+        e++;
+        tmpx = tmpx >> 1;
+    }
+    if (e > 23) {
+        x = x >> (e - 24);
+    }
+    else {
+        x = x << (24 - e);
+    }
+
+    return (((sign << 31) + ((e+126) << 23)) | x);
 }
 // Rating: 4
 /* 
