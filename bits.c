@@ -170,8 +170,8 @@ int fitsBits(int x, int n) {
  *  Rating: 2
  */
 int sign(int x) {
-    int flag = !x + 2&(1 << (x >> 31));
-    return ~0 + (2 >> flag);
+    int flag = (!x) + (2&(1 << (x >> 31)));
+    return (~0) + (2 >> flag);
 }
 /* 
  * getByte - Extract byte n from word x
