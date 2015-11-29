@@ -140,8 +140,8 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int thirdBits(void) {
-    int result = 36;
-    int flag = 36;
+    int result = 73;
+    int flag = 73;
     result = (result << 6) | flag;
     result = (result << 6) | flag;
     result = (result << 6) | flag;
