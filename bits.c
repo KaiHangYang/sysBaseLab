@@ -288,8 +288,12 @@ unsigned float_neg(unsigned uf) {
 unsigned float_i2f(int x) {
     
     unsigned int tmpx = x; // 利用非符号位扩展
-    int sign = ((x >> 31) & 1);
+    int sign = tmpx >> 31;
     int e = 0;
+    unsigned int tmplow = 0;
+    unsigned int tmp;
+    unsigned int mask;
+    tmp = mask = ~0;
     if (x == 0) {
         return 0;
     }
@@ -298,6 +302,7 @@ unsigned float_i2f(int x) {
         x = -x; // 原值
     }
     // 计算e
+    tmpx = x;
     while (1) {
         if (tmpx == 0) {
             break;
@@ -305,14 +310,35 @@ unsigned float_i2f(int x) {
         e++;
         tmpx = tmpx >> 1;
     }
+    tmpx = x;
     if (e > 23) {
-        x = x >> (e - 24);
+        tmpx = tmpx >> (e - 24);
+
     }
     else {
-        x = x << (24 - e);
+        tmpx = tmpx << (24 - e);
     }
-
-    return (((sign << 31) + ((e+126) << 23)) | x);
+    if (e > 24) {
+        // 说明溢出了
+        tmp >>=  (56-e);
+        tmplow = tmp & x;
+        tmp = (tmp >> 1) + 1;
+        if (tmplow > tmp) {
+            //进位
+            tmplow = 1;
+        }
+        else if (tmplow < tmp) {
+            tmplow = 0;
+        }
+        else if ( 1&tmpx ) {
+            tmplow = 1;
+        }
+        else {
+            tmplow = 0;
+        }
+    }
+    mask >>= 9;
+    return ((((sign << 31) + ((e+126) << 23)) | (tmpx&mask)) + tmplow);
 }
 // Rating: 4
 /* 
