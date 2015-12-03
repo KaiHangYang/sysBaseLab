@@ -353,5 +353,20 @@ unsigned float_i2f(int x) {
  *   Rating: 4
  */
 unsigned float_twice(unsigned uf) {
-  return 2;
+    unsigned mask = 0xff << 23;
+    unsigned e = mask & uf;
+    unsigned sign = uf  & (1 << 31);
+    if (e) {
+        if (e != mask) { // 等的话就是可能是无穷或者是NAN 直接返回就行了
+            uf += (0x80 << 16);
+            if (e == (0x7f << 24)) {
+                // 说明 * 2 之后就成了无穷，必须把尾数位变成0
+                uf &= (((0xff << 4)+8) << 20);
+            }
+        }
+    }
+    else {
+        uf = (uf << 1)|sign;
+    }
+    return uf;
 }
