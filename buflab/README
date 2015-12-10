@@ -1,0 +1,5 @@
+level0: Just change the "eip" in stack.
+level1: After changing the "eip", "add" the argument in the stack.(You need to know the what "call" and "ret" did and how to transfer argument.)
+level2: You need to execute your own code in the buffer to change the global variable.
+level3: You need to execute your own code and return to the right position("eip").
+level4: You need to execute your code and change the ebp.(cause your action to change the "eip" changed the "old ebp" in the stack, so you need to recover it.)
